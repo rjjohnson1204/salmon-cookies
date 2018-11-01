@@ -1,37 +1,188 @@
 
-var hours = ['6AM', '7AM', '8AM', '9 AM', '10AM', '11AM', '12PM', '1PM', '2PM', '3PM', '4PM', '5PM', '6PM', '7PM']
+// // var hours = ['6AM', '7AM', '8AM', '9 AM', '10AM', '11AM', '12PM', '1PM', '2PM', '3PM', '4PM', '5PM', '6PM', '7PM']
 
-var pikeStore = {
-  min:  23,
-  max: 63,
-  hour: 15, 
-  avgCookies: 6.3,
-  avgCust: [],
-  cookiesTotal: [],
+// var pikeStore = {
+//   hours:  ['6AM', '7AM', '8AM', '9 AM', '10AM', '11AM', '12PM', '1PM', '2PM', '3PM', '4PM', '5PM', '6PM', '7PM'],
+//   min:  23,
+//   max: 63,
+//   hours: 15, 
+//   avgCookies: 6.3,
+//   custPerHour: [],
+//   cookiesTotal: [],
 
 
 
 
-randomCust: function(min, max) {
-    for (var i = 0; i < hours.length; i++) {
-      var custPerHour = Math.floor(Math.random() * (this.max - this.min)) + 
-      this.min;
-      this.avgCust.push(custPerHour);
+// randomCust: function(min, max) {
+//     for (var i = 0; i < this.hours.length; i++) {
+//       var custPerHour = Math.floor(Math.random() * (this.max - this.min)) + 
+//       this.min;
+//       this.Cust.push(custPerHour);
+//     }
+//   },
+  
+// cookieCount: function(avgCookies) {
+//   for ( var i = 0; i < hours.length; i++){
+//     var avgCookiesPerHour = Math.floor(this.avgCookies * this.custPerHour[i]);
+//     this.cookiesTotal.push(this.avgCookiesPerHour);
+//     this.cookiesTotal += avgCookiesPerHour
+
+//   }
+// }
+  
+// }
+// pikeStore.randomCust();
+// pikeStore.cookiesTotal();
+
+var pike = {  //name of function
+  storeName: 'First and Pike', // name of store
+  minCustPerHour: 3, // minimum customers per day
+  maxCustPerHour: 65, //maximum customers per day 
+  avgCookiesPerCust: 6.3, // average number of cookies a customer buys
+  custPerHour: [], // number of customers that come in per hour
+  cookiesPerHour: [], // cookies sold per hour
+  hoursOfOps: ['6AM', '7AM', '8AM', '9 AM', '10AM', '11AM', '12PM', '1PM', '2PM', '3PM', '4PM', '5PM', '6PM', '7PM', '8PM'], //array of hours of operation
+  dailyTotal: 0,
+  randomCustPerHour: function(min, max) { //function to generate number of customers
+    for(var i = 0; i < this.hoursOfOps.length; i++) { //set paramter for how many times function will run based on array length
+      var randomCust = Math.floor(Math.random() * (max - min + 1) + min); // generates a random down to nearest whole number based on the min and max of the store. Adds the min twice to ensure the output is never below 23. 
+      this.custPerHour.push(randomCust); // from variable randCust we get the average number of customers per hour.
     }
   },
-  
-cookieCount: function(avgCookies) {
-  for ( var i = 0; i < hours.length; i++){
-    var avgCookiesPerHour = Math.floor(this.avgCookies * this.custPerHour[i]);
-    this.cookiesTotal.push(this.avgCookiesPerHour);
-    
+  hourlySales: function() { // function to find the number of cookies sold per hour based the generated customers per hour
+    // Line below will populate custPerHour array
+    this.randomCustPerHour(this.minCustPerHour, this.maxCustPerHour);
 
-  }
-},
-  
-}
-pikeStore.randomCust();
-pikeStore.cookiesCount();
+    for(var i = 0; i < this.hoursOfOps.length; i++) {
+      var perHour = Math.round(this.custPerHour[i] * this.avgCookiesPerCust); // produces number of cookies per hour sold from the average number of cookies per person time the generated number of customers per hour.
+      this.cookiesPerHour.push(perHour); // from varible perHour, the number of cookies per customer is generated based on the number of customers generated from the random customers per hour function 
+
+      // this.dailyTotal = this.dailyTotal + perHour;
+      this.dailyTotal += perHour; //
+    }
+  },
+  render: function() {
+    // Line below will generate hourly sales, which also generates customers per hour
+    this.hourlySales();
+
+    // this.hoursOfOps = ['6a', '7a', '8a']
+    // this.custPerHour = [24, 55, 33]
+    // this.cookiesPerHour = [128, 222, 332]
+
+    // everthing below this line I don't understand yet.
+    var mainEl = document.getElementById('main-content');
+    var containerEl = document.createElement('section');
+
+    var headingEl = document.createElement('h3'); 
+    headingEl.textContent = this.name;
+    containerEl.appendChild(headingEl);
+
+    var ulEl = document.createElement('ul');
+
+    for(var i = 0; i < this.hoursOfOps.length; i++) {
+      var liEl = document.createElement('li');
+      liEl.textContent = `${this.hoursOfOps[i]}: ${this.cookiesPerHour[i]} cookies`; // '6am: 23 cookies'
+      ulEl.appendChild(liEl);
+    }
+
+    var totalEl = document.createElement('li');
+    totalEl.textContent = `Total: ${this.dailyTotal} cookies`;
+    ulEl.appendChild(totalEl);
+
+    containerEl.appendChild(ulEl);
+    mainEl.appendChild(containerEl);
+  },
+}; 
+var seatac = {  //name of function
+  storeName: 'SeaTac Airport', // name of store
+  minCustPerHour: 3, // minimum customers per day
+  maxCustPerHour: 24, //maximum customers per day 
+  avgCookiesPerCust: 1.2, // average number of cookies a customer buys
+  custPerHour: [], // number of customers that come in per hour
+  cookiesPerHour: [], // cookies sold per hour
+  hoursOfOps: ['6AM', '7AM', '8AM', '9 AM', '10AM', '11AM', '12PM', '1PM', '2PM', '3PM', '4PM', '5PM', '6PM', '7PM', '8PM'], //array of hours of operation
+  dailyTotal: 0,
+  randomCustPerHour: function(min, max) { //function to generate number of customers
+    for(var i = 0; i < this.hoursOfOps.length; i++) { //set paramter for how many times function will run based on array length
+      var randomCust = Math.floor(Math.random() * (max - min + 1) + min); // generates a random down to nearest whole number based on the min and max of the store. Adds the min twice to ensure the output is never below 23. 
+      this.custPerHour.push(randomCust); // from variable randCust we get the average number of customers per hour.
+    }
+  },
+  hourlySales: function() { // function to find the number of cookies sold per hour based the generated customers per hour
+    // Line below will populate custPerHour array
+    this.randomCustPerHour(this.minCustPerHour, this.maxCustPerHour);
+
+    for(var i = 0; i < this.hoursOfOps.length; i++) {
+      var perHour = Math.round(this.custPerHour[i] * this.avgCookiesPerCust); // produces number of cookies per hour sold from the average number of cookies per person time the generated number of customers per hour.
+      this.cookiesPerHour.push(perHour); // from varible perHour, the number of cookies per customer is generated based on the number of customers generated from the random customers per hour function 
+
+      // this.dailyTotal = this.dailyTotal + perHour;
+      this.dailyTotal += perHour; //
+    }
+  },
+  render: function() {
+    // Line below will generate hourly sales, which also generates customers per hour
+    this.hourlySales();
+
+    // this.hoursOfOps = ['6a', '7a', '8a']
+    // this.custPerHour = [24, 55, 33]
+    // this.cookiesPerHour = [128, 222, 332]
+
+    // everthing below this line I don't understand yet. //
+    var mainEl = document.getElementById('main-content');
+    var containerEl = document.createElement('section');
+
+    var headingEl = document.createElement('h3'); 
+    headingEl.textContent = this.name;
+    containerEl.appendChild(headingEl);
+
+    var ulEl = document.createElement('ul');
+
+    for(var i = 0; i < this.hoursOfOps.length; i++) {
+      var liEl = document.createElement('li');
+      liEl.textContent = `${this.hoursOfOps[i]}: ${this.cookiesPerHour[i]} cookies`; // '6am: 23 cookies'
+      ulEl.appendChild(liEl);
+    }
+
+    var totalEl = document.createElement('li');
+    totalEl.textContent = `Total: ${this.dailyTotal} cookies`;
+    ulEl.appendChild(totalEl);
+
+    containerEl.appendChild(ulEl);
+    mainEl.appendChild(containerEl);
+  },
+}; 
+var seattle = {  //name of function
+  storeName: 'Seattle Center', // name of store
+  minCustPerHour: 11, // minimum customers per day
+  maxCustPerHour: 38, //maximum customers per day 
+  avgCookiesPerCust: 3.7, // average number of cookies a customer buys
+  custPerHour: [], // number of customers that come in per hour
+  cookiesPerHour: [], // cookies sold per hour
+  hoursOfOps: ['6AM', '7AM', '8AM', '9 AM', '10AM', '11AM', '12PM', '1PM', '2PM', '3PM', '4PM', '5PM', '6PM', '7PM', '8PM'], //array of hours of operation
+  dailyTotal: 0,
+  randomCustPerHour: function(min, max) { //function to generate number of customers
+    for(var i = 0; i < this.hoursOfOps.length; i++) { //set paramter for how many times function will run based on array length
+      var randomCust = Math.floor(Math.random() * (max - min + 1) + min); // generates a random down to nearest whole number based on the min and max of the store. Adds the min twice to ensure the output is never below 23. 
+      this.custPerHour.push(randomCust); // from variable randCust we get the average number of customers per hour.
+    }
+  },
+  hourlySales: function() { // function to find the number of cookies sold per hour based the generated customers per hour
+    // Line below will populate custPerHour array
+    this.randomCustPerHour(this.minCustPerHour, this.maxCustPerHour);
+
+    for(var i = 0; i < this.hoursOfOps.length; i++) {
+      var perHour = Math.round(this.custPerHour[i] * this.avgCookiesPerCust); // produces number of cookies per hour sold from the average number of cookies per person time the generated number of customers per hour.
+      this.cookiesPerHour.push(perHour); // from varible perHour, the number of cookies per customer is generated based on the number of customers generated from the random customers per hour function 
+
+      // this.dailyTotal = this.dailyTotal + perHour;
+      this.dailyTotal += perHour; //
+    }
+  },
+  render: function() {
+    // Line below will generate hourly sales, which also generates customers per hour
+    this.hourlySales();
+
 
 // NOTE: Removed the code from class06 (you can reference it in that class demo directory if need be)
 
@@ -49,104 +200,153 @@ function CookieStand(name, hoursOfOpp, minCust, maxCust, avgCookiesPerHour, cust
 
   console.log('This', this); // This log shows the current contextual reference of the `this` keyword
 
-  this.name = name; // Assign the `name` parameter's value to `this.name`, which is the property belonging to the instance when a Turtle is created.
-  this.color = color;
-  this.hoursOfOpp = ['6AM', '7AM', '8AM', '9 AM', '10AM', '11AM', '12PM', '1PM', '2PM', '3PM', '4PM', '5PM', '6PM', '7PM', '8PM'],;
-  this.minCust = min;
-  this.maxCust = max;
-  this.avgCookiesPerHour = [];
-  this.custPerHour = TBD;
-  this.arrIn = arrIn;
+ 
 
-  turtles.push(this); // Appends the new object (referenced by the contextual `this` keyword) to the turtles array in the global scope
+    // this.hoursOfOps = ['6a', '7a', '8a']
+    // this.custPerHour = [24, 55, 33]
+    // this.cookiesPerHour = [128, 222, 332]
 
-  this.render(); // Call the `render` method belonging to the instane when instantiated.
+    // everthing below this line I don't understand yet. //
+    var mainEl = document.getElementById('main-content');
+    var containerEl = document.createElement('section');
 
+    var headingEl = document.createElement('h3'); 
+    headingEl.textContent = this.name;
+    containerEl.appendChild(headingEl);
 
-  // NOTE: This is an anti-pattern and less efficient than working with the prototype
-  // See `Turtle.prototpye.addWeapon` below the constructor for the correct syntax of adding a method to the constructor
+    var ulEl = document.createElement('ul');
 
-  // this.addWeapon = function(weaponName) {
-  //   this.weapons.push(weaponName);
-  // };
-}
+    for(var i = 0; i < this.hoursOfOps.length; i++) {
+      var liEl = document.createElement('li');
+      liEl.textContent = `${this.hoursOfOps[i]}: ${this.cookiesPerHour[i]} cookies`; // '6am: 23 cookies'
+      ulEl.appendChild(liEl);
+    }
 
-Turtle.prototype.addWeapon = function (weaponName) { // Call this method like this:  turtle[0].addWeapon('katana');
-  // This method is available to ANY Turtle instance created
-  // The `this` keyword references the Turtle that called the method, which means there is a contextual reference to the Turtle object
-  this.weapons.push(weaponName);
-};
+    var totalEl = document.createElement('li');
+    totalEl.textContent = `Total: ${this.dailyTotal} cookies`;
+    ulEl.appendChild(totalEl);
 
-Turtle.prototype.render = function() {
-  // This render method belongs to ALL Turtle instances, as a method with contextual reference to the Turtle that used it.
-  var tbodyEl = document.getElementById('tbl-body'); // Anchor to HTMLElement with an ID of tbl-body
-  var trEl = document.createElement('tr'); // Create a new <tr></tr>
-  var thEl = document.createElement('th'); // Create a new <th></th>
-  thEl.textContent = this.name; // Give the th element text content
-  trEl.appendChild(thEl); // Add the th element as a child to the tr element
+    containerEl.appendChild(ulEl);
+    mainEl.appendChild(containerEl);
+  },
+}; 
 
-  // NOTE: In YOUR code, this is the point in logic where you get to write a for loop in your lab assignment today!!
+var capHill = {  //name of function
+  storeName: 'Capitol Hill', // name of store
+  minCustPerHour: 20, // minimum customers per day
+  maxCustPerHour: 38, //maximum customers per day 
+  avgCookiesPerCust: 2.3, // average number of cookies a customer buys
+  custPerHour: [], // number of customers that come in per hour
+  cookiesPerHour: [], // cookies sold per hour
+  hoursOfOps: ['6AM', '7AM', '8AM', '9 AM', '10AM', '11AM', '12PM', '1PM', '2PM', '3PM', '4PM', '5PM', '6PM', '7PM', '8PM'], //array of hours of operation
+  dailyTotal: 0,
+  randomCustPerHour: function(min, max) { //function to generate number of customers
+    for(var i = 0; i < this.hoursOfOps.length; i++) { //set paramter for how many times function will run based on array length
+      var randomCust = Math.floor(Math.random() * (max - min + 1) + min); // generates a random down to nearest whole number based on the min and max of the store. Adds the min twice to ensure the output is never below 23. 
+      this.custPerHour.push(randomCust); // from variable randCust we get the average number of customers per hour.
+    }
+  },
+  hourlySales: function() { // function to find the number of cookies sold per hour based the generated customers per hour
+    // Line below will populate custPerHour array
+    this.randomCustPerHour(this.minCustPerHour, this.maxCustPerHour);
 
-  // Create three td elements for adding more cells to the tr element
-  var colorEl = document.createElement('td');
-  var ageEl = document.createElement('td');
-  var ninjaEl = document.createElement('td');
+    for(var i = 0; i < this.hoursOfOps.length; i++) {
+      var perHour = Math.round(this.custPerHour[i] * this.avgCookiesPerCust); // produces number of cookies per hour sold from the average number of cookies per person time the generated number of customers per hour.
+      this.cookiesPerHour.push(perHour); // from varible perHour, the number of cookies per customer is generated based on the number of customers generated from the random customers per hour function 
 
-  // Provide each of the three td elements with text content
-  colorEl.textContent = this.color;
-  ageEl.textContent = this.age;
-  ninjaEl.textContent = this.ninja;
+      // this.dailyTotal = this.dailyTotal + perHour;
+      this.dailyTotal += perHour; //
+    }
+  },
+  render: function() {
+    // Line below will generate hourly sales, which also generates customers per hour
+    this.hourlySales();
 
-  // Append each of the td elements to the tr element
-  trEl.appendChild(colorEl);
-  trEl.appendChild(ageEl);
-  trEl.appendChild(ninjaEl);
+    // this.hoursOfOps = ['6a', '7a', '8a']
+    // this.custPerHour = [24, 55, 33]
+    // this.cookiesPerHour = [128, 222, 332]
 
-  // Finally, append the row to the tbody
-  tbodyEl.appendChild(trEl);
-};
+    // everthing below this line I don't understand yet. //
+    var mainEl = document.getElementById('main-content');
+    var containerEl = document.createElement('section');
 
-function createTable() {
-  // This function is used to establish ONE SINGLE table in the DOM for us to work with when we start rendering individual rows for each Turtle
-  var mainEl = document.getElementById('main-content');
-  var tblEl = document.createElement('table');
-  var theadEl = document.createElement('thead');
-  var tbodyEl = document.createElement('tbody');
-  var tfootEl = document.createElement('tfoot');
+    var headingEl = document.createElement('h3'); 
+    headingEl.textContent = this.name;
+    containerEl.appendChild(headingEl);
 
-  mainEl.appendChild(tblEl);
-  tblEl.appendChild(theadEl);
-  tblEl.appendChild(tbodyEl);
-  tblEl.appendChild(tfootEl);
+    var ulEl = document.createElement('ul');
 
-  tblEl.id = 'turtle-table';
-  theadEl.id = 'tbl-head';
-  tbodyEl.id = 'tbl-body';
-  tfootEl.id = 'tbl-foot';
-  tblEl.className = 'tbl';
-}
+    for(var i = 0; i < this.hoursOfOps.length; i++) {
+      var liEl = document.createElement('li');
+      liEl.textContent = `${this.hoursOfOps[i]}: ${this.cookiesPerHour[i]} cookies`; // '6am: 23 cookies'
+      ulEl.appendChild(liEl);
+    }
 
-// NOTE: BELOW IS THE EXECUTION OF ALL THE CODE WE WROTE ABOVE.
-// WITHOUT THE CALLS BELOW, NOTHING WILL RUN.
+    var totalEl = document.createElement('li');
+    totalEl.textContent = `Total: ${this.dailyTotal} cookies`;
+    ulEl.appendChild(totalEl);
 
-createTable(); // Calls the function to create a table with head/body/foot and IDs built into the DOM.
+    containerEl.appendChild(ulEl);
+    mainEl.appendChild(containerEl);
+  },
+}; 
+var alki = {  //name of function
+  storeName: 'Alki', // name of store
+  minCustPerHour: 2, // minimum customers per day
+  maxCustPerHour: 16, //maximum customers per day 
+  avgCookiesPerCust: 4.6, // average number of cookies a customer buys
+  custPerHour: [], // number of customers that come in per hour
+  cookiesPerHour: [], // cookies sold per hour
+  hoursOfOps: ['6AM', '7AM', '8AM', '9 AM', '10AM', '11AM', '12PM', '1PM', '2PM', '3PM', '4PM', '5PM', '6PM', '7PM', '8PM'], //array of hours of operation
+  dailyTotal: 0,
+  randomCustPerHour: function(min, max) { //function to generate number of customers
+    for(var i = 0; i < this.hoursOfOps.length; i++) { //set paramter for how many times function will run based on array length
+      var randomCust = Math.floor(Math.random() * (max - min + 1) + min); // generates a random down to nearest whole number based on the min and max of the store. Adds the min twice to ensure the output is never below 23. 
+      this.custPerHour.push(randomCust); // from variable randCust we get the average number of customers per hour.
+    }
+  },
+  hourlySales: function() { // function to find the number of cookies sold per hour based the generated customers per hour
+    // Line below will populate custPerHour array
+    this.randomCustPerHour(this.minCustPerHour, this.maxCustPerHour);
 
+    for(var i = 0; i < this.hoursOfOps.length; i++) {
+      var perHour = Math.round(this.custPerHour[i] * this.avgCookiesPerCust); // produces number of cookies per hour sold from the average number of cookies per person time the generated number of customers per hour.
+      this.cookiesPerHour.push(perHour); // from varible perHour, the number of cookies per customer is generated based on the number of customers generated from the random customers per hour function 
 
-// Instantiate Turtles
-console.log(turtles); // => []
+      // this.dailyTotal = this.dailyTotal + perHour;
+      this.dailyTotal += perHour; //
+    }
+  },
+  render: function() {
+    // Line below will generate hourly sales, which also generates customers per hour
+    this.hourlySales();
 
-// Below are the four lines where we actually instantiate (create) a new Turtle object for each line.
-// REMINDER: Constructor functions are just functions.
-// The NEW keyword is doing all the work to (1) create a new object and (2) provide contextual reference for the `this` keyword` to be used
-new Turtle('Raphael', 'red', true);
-new Turtle('Michaelangelo', 'orange', true);
-new Turtle('Leonardo', 'blue', true);
-new Turtle('Donatello', 'purple', true);
+    // this.hoursOfOps = ['6a', '7a', '8a']
+    // this.custPerHour = [24, 55, 33]
+    // this.cookiesPerHour = [128, 222, 332]
 
-console.log(turtles); // => [Turtle {} x 4]
+    // everthing below this line I don't understand...yet. //
+    var mainEl = document.getElementById('main-content');
+    var containerEl = document.createElement('section');
 
+    var headingEl = document.createElement('h3'); 
+    headingEl.textContent = this.name;
+    containerEl.appendChild(headingEl);
 
-// NOTE: We are doing this work in the constructor with `this.render()`
-// for (var i = 0; i < turtles.length; i++) {
-//   turtles[i].render();
-// }
+    var ulEl = document.createElement('ul');
+
+    for(var i = 0; i < this.hoursOfOps.length; i++) {
+      var liEl = document.createElement('li');
+      liEl.textContent = `${this.hoursOfOps[i]}: ${this.cookiesPerHour[i]} cookies`; // '6am: 23 cookies'
+      ulEl.appendChild(liEl);
+    }
+
+    var totalEl = document.createElement('li');
+    totalEl.textContent = `Total: ${this.dailyTotal} cookies`;
+    ulEl.appendChild(totalEl);
+
+    containerEl.appendChild(ulEl);
+    mainEl.appendChild(containerEl);
+  },
+}; 
+
