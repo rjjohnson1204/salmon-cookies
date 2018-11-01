@@ -183,6 +183,25 @@ var seattle = {  //name of function
     // Line below will generate hourly sales, which also generates customers per hour
     this.hourlySales();
 
+
+// NOTE: Removed the code from class06 (you can reference it in that class demo directory if need be)
+
+
+// NOTE: FOLLOWING CODE IS DEFINITION OF CODE. YOU WILL SEE ANOTHER NOTE DOWN A WAYS THAT STATES WHEN AND WHERE WE START EXECUTING CODE.
+
+
+
+var cookieStand = []; // Creates an empty container (array) to hold Turtles when they are instantiated
+
+// Want to find the number of cookies sold per hour per customer based based on the store traffic utilizing an object with the methods inside to yeild results.
+// Known info includes min and max customers for each store, hours of operation, average cookies sold per customer.  
+// This is our blueprint
+function CookieStand(name, hoursOfOpp, minCust, maxCust, avgCookiesPerHour, custPerHour,  arrIn) {
+
+  console.log('This', this); // This log shows the current contextual reference of the `this` keyword
+
+ 
+
     // this.hoursOfOps = ['6a', '7a', '8a']
     // this.custPerHour = [24, 55, 33]
     // this.cookiesPerHour = [128, 222, 332]
@@ -330,3 +349,4 @@ var alki = {  //name of function
     mainEl.appendChild(containerEl);
   },
 }; 
+
