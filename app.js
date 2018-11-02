@@ -34,6 +34,7 @@
 // pikeStore.randomCust();
 // pikeStore.cookiesTotal();
 
+
 var pike = {  //name of function
   storeName: 'First and Pike', // name of store
   minCustPerHour: 3, // minimum customers per day
@@ -93,6 +94,7 @@ var pike = {  //name of function
     mainEl.appendChild(containerEl);
   },
 }; 
+
 var seatac = {  //name of function
   storeName: 'SeaTac Airport', // name of store
   minCustPerHour: 3, // minimum customers per day
@@ -152,6 +154,7 @@ var seatac = {  //name of function
     mainEl.appendChild(containerEl);
   },
 }; 
+
 var seattle = {  //name of function
   storeName: 'Seattle Center', // name of store
   minCustPerHour: 11, // minimum customers per day
