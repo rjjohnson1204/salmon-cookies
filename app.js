@@ -16,9 +16,9 @@ function Store(name, minCust, maxCust, avgCookies) {
   createTableFooter();
 }
 
-Store.prototype.generateRandomCustPerHour = function(min, max) {
+Store.prototype.generateRandomCustPerHour = function(minCust, maxCust) {
   for (var i = 0; i < hoursOfOps.length; i++) {
-    var randomCust = Math.floor(Math.random() * (max - min + 1) + min);
+    var randomCust = Math.floor(Math.random() * (maxCust - minCust + 1) + minCust);
     this.custPerHour.push(randomCust);
   }
 };
@@ -40,7 +40,7 @@ Store.prototype.render = function() {
   // Line below will generate hourly sales, which also generates customers per hour
   this.generateHourlySales();
 
-  var tbodyEl = document.getElementById('tbody');
+  var tbodyEl = document.getElementById('tbl-body');
   var trEl = document.createElement('tr');
   // this.name => 'First and Pike'
   // trEl.id = this.name.toLowerCase().replace(' ', '_') // Scott will come back to this if we have time.
@@ -62,8 +62,16 @@ Store.prototype.render = function() {
   tbodyEl.appendChild(trEl);
 };
 
+function createTable() {
+  var mainEl = document.getElementById('main-content');
+  var tblEl = document.createElement('table');
+  tblEl.id = 'sales-table';
+  mainEl.appendChild(tblEl);
+}
+
 function createTableHeader() {
-  var theadEl = document.getElementById('thead');
+  var tblEl = document.getElementById('sales-table');
+  var theadEl = document.createElement('thead');
   var trEl = document.createElement('tr');
   var emptyTh = document.createElement('th');
 
@@ -80,42 +88,60 @@ function createTableHeader() {
   trEl.appendChild(totalEl);
 
   theadEl.appendChild(trEl);
+  tblEl.appendChild(theadEl);
+}
+
+function createTableBody() {
+  var tblEl = document.getElementById('sales-table');
+  var tbodyEl = document.createElement('tbody');
+  tbodyEl.id = 'tbl-body';
+  tblEl.appendChild(tbodyEl);
 }
 
 function createTableFooter() {
+  var tfootElCheck = document.getElementById('tbl-foot');
 
-  var tfootEl = document.getElementById('tfoot');
+  if(tfootElCheck) {
+    tfootElCheck.remove();
+  }
+
+  var tblEl = document.getElementById('sales-table');
+  var tfootEl = document.createElement('tfoot');
   var trEl = document.createElement('tr');
 
+  tfootEl.id = 'tbl-foot';
 
   var emptyThEl = document.createElement('th');
   trEl.appendChild(emptyThEl);
 
-  // var grandTotal = 0;
-  // for(var i = 0; i < hoursOfOps.length; i++) {
-  //   var tdEl = document.createElement('td');
-  //   var totals = 0;
+  var grandTotal = 0;
+  for(var i = 0; i < hoursOfOps.length; i++) {
+    var tdEl = document.createElement('td');
+    var totals = 0;
 
-  //   for(var j = 0; j < stores.length; j++) {
-  //     totals += stores[j].cookiesPerHour[i];
-  //   }
+    for(var j = 0; j < stores.length; j++) {
+      totals += stores[j].cookiesPerHour[i];
+    }
 
-  //   tdEl.textContent = totals;
-  //   trEl.appendChild(tdEl);
+    tdEl.textContent = totals;
+    trEl.appendChild(tdEl);
 
-  //   grandTotal += totals;
-  // }
+    grandTotal += totals;
+  }
 
-  // var grandTotalEl = document.createElement('td');
-  // grandTotalEl.textContent = grandTotal;
-  // trEl.appendChild(grandTotalEl);
+  var grandTotalEl = document.createElement('td');
+  grandTotalEl.textContent = grandTotal;
+  trEl.appendChild(grandTotalEl);
 
   tfootEl.appendChild(trEl);
+  tblEl.appendChild(tfootEl);
 }
 
 
 (function run() {
+  createTable();
   createTableHeader();
+  createTableBody();
 })();
 
 new Store('First and Pike', 23, 65, 6.4);
