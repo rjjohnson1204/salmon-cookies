@@ -1,11 +1,11 @@
 var stores = [];
-var hoursOfOps = ['6am', '7am', '8am', '9am', '10am', '11am', '12pm', '1pm', '2pm', '3pm', '4pm', '5pm', '6pm', '7pm', '8pm', '9pm'];
+var hoursOfOps = ['6am', '7am', '8am', '9am', '10am', '11am', '12pm', '1pm', '2pm', '3pm', '4pm', '5pm', '6pm', '7pm', '8pm'];
 
-function Store(name, min, max, avg) {
+function Store(name, minCust, maxCust, avgCookies) {
   this.name = name;
-  this.min = min;
-  this.max = max;
-  this.avg = avg;
+  this.minCust = minCust;
+  this.maxCust = maxCust;
+  this.avgCookies = avgCookies;
   this.custPerHour = [];
   this.cookiesPerHour = [];
   this.dailyTotal = 0;
@@ -25,10 +25,10 @@ Store.prototype.generateRandomCustPerHour = function(min, max) {
 
 Store.prototype.generateHourlySales = function() {
   // Line below will populate custPerHour array
-  this.generateRandomCustPerHour(this.min, this.max);
+  this.generateRandomCustPerHour(this.minCust, this.maxCust);
 
   for (var i = 0; i < hoursOfOps.length; i++) {
-    var perHour = Math.round(this.custPerHour[i] * this.avg);
+    var perHour = Math.round(this.custPerHour[i] * this.avgCookies);
     this.cookiesPerHour.push(perHour);
 
     // this.dailyTotal = this.dailyTotal + perHour;
@@ -40,7 +40,7 @@ Store.prototype.render = function() {
   // Line below will generate hourly sales, which also generates customers per hour
   this.generateHourlySales();
 
-  var tbodyEl = document.getElementById('tbl-body');
+  var tbodyEl = document.getElementById('tbody');
   var trEl = document.createElement('tr');
   // this.name => 'First and Pike'
   // trEl.id = this.name.toLowerCase().replace(' ', '_') // Scott will come back to this if we have time.
@@ -62,16 +62,8 @@ Store.prototype.render = function() {
   tbodyEl.appendChild(trEl);
 };
 
-function createTable() {
-  var mainEl = document.getElementById('main-content');
-  var tblEl = document.createElement('table');
-  tblEl.id = 'sales-table';
-  mainEl.appendChild(tblEl);
-}
-
 function createTableHeader() {
-  var tblEl = document.getElementById('sales-table');
-  var theadEl = document.createElement('thead');
+  var theadEl = document.getElementById('thead');
   var trEl = document.createElement('tr');
   var emptyTh = document.createElement('th');
 
@@ -88,65 +80,49 @@ function createTableHeader() {
   trEl.appendChild(totalEl);
 
   theadEl.appendChild(trEl);
-  tblEl.appendChild(theadEl);
-}
-
-function createTableBody() {
-  var tblEl = document.getElementById('sales-table');
-  var tbodyEl = document.createElement('tbody');
-  tbodyEl.id = 'tbl-body';
-  tblEl.appendChild(tbodyEl);
 }
 
 function createTableFooter() {
-  var tfootElCheck = document.getElementById('tbl-foot');
 
-  if(tfootElCheck) {
-    tfootElCheck.remove();
-  }
-
-  var tblEl = document.getElementById('sales-table');
-  var tfootEl = document.createElement('tfoot');
+  var tfootEl = document.getElementById('tfoot');
   var trEl = document.createElement('tr');
 
-  tfootEl.id = 'tbl-foot';
 
   var emptyThEl = document.createElement('th');
   trEl.appendChild(emptyThEl);
 
-  var grandTotal = 0;
-  for(var i = 0; i < hoursOfOps.length; i++) {
-    var tdEl = document.createElement('td');
-    var totals = 0;
+  // var grandTotal = 0;
+  // for(var i = 0; i < hoursOfOps.length; i++) {
+  //   var tdEl = document.createElement('td');
+  //   var totals = 0;
 
-    for(var j = 0; j < stores.length; j++) {
-      totals += stores[j].cookiesPerHour[i];
-    }
+  //   for(var j = 0; j < stores.length; j++) {
+  //     totals += stores[j].cookiesPerHour[i];
+  //   }
 
-    tdEl.textContent = totals;
-    trEl.appendChild(tdEl);
+  //   tdEl.textContent = totals;
+  //   trEl.appendChild(tdEl);
 
-    grandTotal += totals;
-  }
+  //   grandTotal += totals;
+  // }
 
-  var grandTotalEl = document.createElement('td');
-  grandTotalEl.textContent = grandTotal;
-  trEl.appendChild(grandTotalEl);
+  // var grandTotalEl = document.createElement('td');
+  // grandTotalEl.textContent = grandTotal;
+  // trEl.appendChild(grandTotalEl);
 
   tfootEl.appendChild(trEl);
-  tblEl.appendChild(tfootEl);
 }
 
 
 (function run() {
-  createTable();
   createTableHeader();
-  createTableBody();
 })();
 
 new Store('First and Pike', 23, 65, 6.4);
 new Store('SeaTac', 12, 34, 3.4);
 new Store('Seattle Center', 3, 5, 4.1);
+new Store('Capitol Hill', 20, 38, 2.3);
+new Store('Alki', 2, 16, 4.6);
 
 
 // var salesFormEl = document.getElementById('sales-form');
@@ -156,14 +132,14 @@ document.getElementById('sales-form').addEventListener('submit', function(event)
   event.preventDefault();
 
   var name = event.target.storename.value;
-  var min = event.target.min.value;
-  var max = event.target.max.value;
-  var avg = event.target.avg.value;
+  var minCust = event.target.minCust.value;
+  var maxCust = event.target.maxCust.value;
+  var avgCookies = event.target.avgCookies.value;
 
-  new Store(name, min, max, avg);
+  new Store(name, minCust, maxCust, avgCookies);
 
   event.target.storename.value = '';
-  event.target.min.value = '';
-  event.target.max.value = '';
-  event.target.avg.value = '';
+  event.target.minCust.value = '';
+  event.target.maxCust.value = '';
+  event.target.avgCookies.value = '';
 });
