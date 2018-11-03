@@ -141,4 +141,10 @@ document.getElementById('sales-form').addEventListener('submit', function(event)
   event.target.minCust.value = '';
   event.target.maxCust.value = '';
   event.target.avgCookies.value = '';
+
+
+  var tfootEl = document.getElementById('tfoot');
+  tfootEl.innerHTML = '';
+
+  createTableFooter();
 });
