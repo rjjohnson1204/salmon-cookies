@@ -12,13 +12,12 @@ function Store(name, minCust, maxCust, avgCookies) {
 
   stores.push(this);
   this.render();
-
-  createTableFooter();
 }
 
-Store.prototype.generateRandomCustPerHour = function(minCust, maxCust) {
+Store.prototype.generateRandomCustPerHour = function(min, max) {
   for (var i = 0; i < hoursOfOps.length; i++) {
-    var randomCust = Math.floor(Math.random() * (maxCust - minCust + 1) + minCust);
+    var randomCust = Math.floor(Math.random() * (max - min + 1) + min);
+
     this.custPerHour.push(randomCust);
   }
 };
@@ -40,10 +39,10 @@ Store.prototype.render = function() {
   // Line below will generate hourly sales, which also generates customers per hour
   this.generateHourlySales();
 
-  var tbodyEl = document.getElementById('tbl-body');
+  console.log('calling render method');
+
+  var tbodyEl = document.getElementById('tbody');
   var trEl = document.createElement('tr');
-  // this.name => 'First and Pike'
-  // trEl.id = this.name.toLowerCase().replace(' ', '_') // Scott will come back to this if we have time.
 
   var thEl = document.createElement('th');
   thEl.textContent = this.name;
@@ -62,16 +61,9 @@ Store.prototype.render = function() {
   tbodyEl.appendChild(trEl);
 };
 
-function createTable() {
-  var mainEl = document.getElementById('main-content');
-  var tblEl = document.createElement('table');
-  tblEl.id = 'sales-table';
-  mainEl.appendChild(tblEl);
-}
 
 function createTableHeader() {
-  var tblEl = document.getElementById('sales-table');
-  var theadEl = document.createElement('thead');
+  var theadEl = document.getElementById('thead');
   var trEl = document.createElement('tr');
   var emptyTh = document.createElement('th');
 
@@ -88,31 +80,18 @@ function createTableHeader() {
   trEl.appendChild(totalEl);
 
   theadEl.appendChild(trEl);
-  tblEl.appendChild(theadEl);
-}
 
-function createTableBody() {
-  var tblEl = document.getElementById('sales-table');
-  var tbodyEl = document.createElement('tbody');
-  tbodyEl.id = 'tbl-body';
-  tblEl.appendChild(tbodyEl);
 }
 
 function createTableFooter() {
-  var tfootElCheck = document.getElementById('tbl-foot');
 
-  if(tfootElCheck) {
-    tfootElCheck.remove();
-  }
-
-  var tblEl = document.getElementById('sales-table');
-  var tfootEl = document.createElement('tfoot');
+  var tfootEl = document.getElementById('tfoot');
   var trEl = document.createElement('tr');
 
-  tfootEl.id = 'tbl-foot';
+  var totalThEl = document.createElement('th');
+  totalThEl.textContent = 'Hourly Totals';
+  trEl.appendChild(totalThEl);
 
-  var emptyThEl = document.createElement('th');
-  trEl.appendChild(emptyThEl);
 
   var grandTotal = 0;
   for(var i = 0; i < hoursOfOps.length; i++) {
@@ -133,15 +112,12 @@ function createTableFooter() {
   grandTotalEl.textContent = grandTotal;
   trEl.appendChild(grandTotalEl);
 
+
   tfootEl.appendChild(trEl);
-  tblEl.appendChild(tfootEl);
 }
 
-
 (function run() {
-  createTable();
   createTableHeader();
-  createTableBody();
 })();
 
 new Store('First and Pike', 23, 65, 6.4);
@@ -150,6 +126,8 @@ new Store('Seattle Center', 3, 5, 4.1);
 new Store('Capitol Hill', 20, 38, 2.3);
 new Store('Alki', 2, 16, 4.6);
 
+createTableFooter();
+
 
 // var salesFormEl = document.getElementById('sales-form');
 // salesFormEl.addEventListener('submit', function() {})
@@ -157,10 +135,11 @@ new Store('Alki', 2, 16, 4.6);
 document.getElementById('sales-form').addEventListener('submit', function(event) {
   event.preventDefault();
 
+
   var name = event.target.storename.value;
-  var minCust = event.target.minCust.value;
-  var maxCust = event.target.maxCust.value;
-  var avgCookies = event.target.avgCookies.value;
+  var minCust = parseInt(event.target.minCust.value);
+  var maxCust = parseInt(event.target.maxCust.value);
+  var avgCookies = parseInt(event.target.avgCookies.value);
 
   new Store(name, minCust, maxCust, avgCookies);
 
@@ -168,4 +147,11 @@ document.getElementById('sales-form').addEventListener('submit', function(event)
   event.target.minCust.value = '';
   event.target.maxCust.value = '';
   event.target.avgCookies.value = '';
+
+
+  var tfootEl = document.getElementById('tfoot');
+  tfootEl.innerHTML = '';
+
+  createTableFooter();
+
 });
