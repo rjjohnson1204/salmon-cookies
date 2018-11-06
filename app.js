@@ -155,3 +155,4 @@ document.getElementById('sales-form').addEventListener('submit', function(event)
   createTableFooter();
 
 });
+
