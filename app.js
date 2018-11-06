@@ -17,6 +17,7 @@ function Store(name, minCust, maxCust, avgCookies) {
 Store.prototype.generateRandomCustPerHour = function(min, max) {
   for (var i = 0; i < hoursOfOps.length; i++) {
     var randomCust = Math.floor(Math.random() * (max - min + 1) + min);
+
     this.custPerHour.push(randomCust);
   }
 };
@@ -37,6 +38,7 @@ Store.prototype.generateHourlySales = function() {
 Store.prototype.render = function() {
   // Line below will generate hourly sales, which also generates customers per hour
   this.generateHourlySales();
+
   console.log('calling render method');
 
   var tbodyEl = document.getElementById('tbody');
@@ -59,6 +61,7 @@ Store.prototype.render = function() {
   tbodyEl.appendChild(trEl);
 };
 
+
 function createTableHeader() {
   var theadEl = document.getElementById('thead');
   var trEl = document.createElement('tr');
@@ -77,6 +80,7 @@ function createTableHeader() {
   trEl.appendChild(totalEl);
 
   theadEl.appendChild(trEl);
+
 }
 
 function createTableFooter() {
@@ -87,6 +91,7 @@ function createTableFooter() {
   var totalThEl = document.createElement('th');
   totalThEl.textContent = 'Hourly Totals';
   trEl.appendChild(totalThEl);
+
 
   var grandTotal = 0;
   for(var i = 0; i < hoursOfOps.length; i++) {
@@ -106,6 +111,7 @@ function createTableFooter() {
   var grandTotalEl = document.createElement('td');
   grandTotalEl.textContent = grandTotal;
   trEl.appendChild(grandTotalEl);
+
 
   tfootEl.appendChild(trEl);
 }
@@ -147,5 +153,6 @@ document.getElementById('sales-form').addEventListener('submit', function(event)
   tfootEl.innerHTML = '';
 
   createTableFooter();
+
 });
 
